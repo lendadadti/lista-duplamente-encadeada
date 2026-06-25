@@ -43,8 +43,10 @@ public class No {
     public boolean equals(Object that) {
         if(this.ambosOsObjetosPossuemAMesmaIdentidade(that)) return true;
         if(!this.ambosOsObjetosSaoCompativeis(that)) return false;
-        No no = (No) that;
-        return (this.getNoAnterior() == no.getNoAnterior()) && (this.getProximoNo() == no.getProximoNo()) && Objects.equals(this.getDado(), no.getDado());
+
+        // Aqui ficou o cast porque ainda quero comparar o dado armazenado dentro do objeto
+        No thatNo = (No) that;
+        return (this.getNoAnterior() == thatNo.getNoAnterior()) && (this.getProximoNo() == thatNo.getProximoNo()) && Objects.equals(this.getDado(), thatNo.getDado());
     }
 
     public No(No noAnterior, String dado, No proximoNo) {
@@ -83,6 +85,10 @@ public class No {
 
     public void setProximoNo(No proximoNo) {
         this.proximoNo = proximoNo;
+    }
+
+    public String toString() {
+        return "[ " + getDado() + " ]";
     }
 
 }

@@ -1,115 +1,105 @@
 public class ListaDuplamenteEncadeada {
-    No cabeca;
-    No cauda;
-
-    public static void main(String[] args) {
-        System.out.println("Olá, mundo!");
-        No noA = new No("A");
-        ListaDuplamenteEncadeada lista = new ListaDuplamenteEncadeada();
-        lista.inserirEmSequencia(noA);
-    }
+    No primeiroNo;
+    No ultimoNo;
+    int tamanho;
 
     public ListaDuplamenteEncadeada() {
-        this.cabeca = null;
-        this.cauda = null;
+        primeiroNo = null;
+        ultimoNo = null;
+        tamanho = 0;
     }
 
-    public boolean estaVazia() {
-        return (this.cabeca == null) && (this.cauda == null);
+    public void primeiraInsercao(No novoPrimeiroNo) {
+        primeiroNo = novoPrimeiroNo;
+        ultimoNo = novoPrimeiroNo;
+        incrementarTamanho();
     }
 
-    public boolean temNoCabeca() {
-        return this.cabeca != null;
-    }
-
-    public boolean temNoCauda() {
-        return this.cauda != null;
-    }
-
-    public void inserirDepois(No noDaVez, No novoNo) {
-        if(this.estaVazia()) {
-            throw new RuntimeException("A lista está vazia.");
+    public void primeiraInsercao(String dadoDoNovoPrimeiroNo) {
+        if(!estaVazia()) {
+            throw new RuntimeException("A lista já teve uma primeira inserção");
         }
-        if(!esteNoExisteNaLista(noDaVez)) {
-            throw new RuntimeException("O nó de referência não existe na lista.");
-        }
-        if(this.soTemUmNo()) {
-            this.inserirEmSequencia(novoNo);
-            return;
-        }
-        No noOrfao = noDaVez.getProximoNo();
-        noDaVez.setProximoNo(novoNo);
-        noOrfao.setNoAnterior(novoNo);
-        novoNo.setNoAnterior(noDaVez);
-        novoNo.setProximoNo(noOrfao);
-    }
 
-    public boolean soTemUmNo() {
-        return this.cabeca == this.cauda;
-    }
-
-    public void setCabeca(No cabeca) {
-        this.cabeca = cabeca;
+        No novoPrimeiroNo = new No(dadoDoNovoPrimeiroNo);
+        primeiroNo = novoPrimeiroNo;
+        ultimoNo = novoPrimeiroNo;
+        incrementarTamanho();
     }
 
     public void inserirEmSequencia(No novoNo) {
-        // 1 - A lista está vazia
-        if(this.estaVazia()) {
-            this.setCabeca(novoNo);
-            this.setCauda(novoNo);
+        if(estaVazia()) {
+            primeiraInsercao(novoNo);
         } else {
-            // 2 - Tem um nó na lista, mas só ele
-            if(this.soTemUmNo()) {
-                this.setCauda(novoNo);
-                this.getCabeca().setProximoNo(novoNo);
-                this.getCauda().setNoAnterior(this.getCabeca());
-            } else {
-                // 3 - o nó é só mais um
-                novoNo.setNoAnterior(this.getCauda());
-                this.getCauda().setProximoNo(novoNo);
-                this.setCauda(novoNo);
+            No ultimoNoAtual = ultimoNo;
+            ultimoNo.setProximoNo(novoNo);
+            ultimoNo = novoNo;
+            ultimoNo.setNoAnterior(ultimoNo);
+            ultimoNoAtual.setProximoNo(ultimoNo);
+            incrementarTamanho();
+        }
+    }
+
+    public void inserirEmSequencia(String dadoDoNovoNo) {
+        No novoNo = new No(dadoDoNovoNo);
+        if(estaVazia()) {
+            primeiraInsercao(novoNo);
+        } else {
+            No ultimoNoAtual = ultimoNo;
+            ultimoNo.setProximoNo(novoNo);
+            ultimoNo = novoNo;
+            ultimoNo.setNoAnterior(ultimoNo);
+            ultimoNoAtual.setProximoNo(ultimoNo);
+            incrementarTamanho();
+        }
+    }
+
+    public int getTamanho() {
+        return tamanho;
+    }
+
+    public void incrementarTamanho() {
+        tamanho++;
+    }
+
+    public boolean estaVazia() {
+        return tamanho == 0;
+    }
+
+    @Override
+    public String toString() {
+        if (estaVazia()) {
+            return "∅";
+        }
+
+        StringBuilder resultado = new StringBuilder();
+
+        No atual = primeiroNo;
+
+        if (atual.getNoAnterior() == null) {
+            resultado.append("∅");
+        }
+
+        while (atual != null) {
+            resultado.append(" ⇔ ").append(atual.toString());
+
+            if (atual.getProximoNo() == null) {
+                resultado.append(" ⇔ ∅");
             }
+
+            atual = atual.getProximoNo();
         }
+
+        return resultado.toString();
     }
 
-    public No getCauda() {
-        return cauda;
-    }
-
-    public void setCauda(No cauda) {
-        this.cauda = cauda;
-    }
-
-    public No getCabeca() {
-        return this.cabeca;
-    }
-
-    public int tamanho() {
-        if(this.estaVazia()) {
-            return 0;
-        }
-        if(this.soTemUmNo()) {
-            return 1;
-        }
-        int contador = 0;
-        No ultimoNo = this.cauda;
-        No oNoDaVez = this.cabeca;
-        while(oNoDaVez != null) {
-            contador++;
-            oNoDaVez = oNoDaVez.getProximoNo();
-        }
-        return contador;
-    }
-
-    public boolean esteNoExisteNaLista(No noBuscado) {
-        if(this.estaVazia()) {
-            return false;
-        }
-        No oNoDaVez = this.getCabeca();
-        while(oNoDaVez != null) {
-            if(oNoDaVez == noBuscado) return true;
-            oNoDaVez = oNoDaVez.getProximoNo();
-        }
-        return false;
+    public static void main(String[] args) {
+        ListaDuplamenteEncadeada lista = new ListaDuplamenteEncadeada();
+        System.out.println(lista.toString());
+        lista.inserirEmSequencia("1o nó");
+        System.out.println(lista.toString());
+        lista.inserirEmSequencia("2o nó");
+        System.out.println(lista.toString());
+        lista.inserirEmSequencia("3o nó");
+        System.out.println(lista.toString());
     }
 }
