@@ -103,7 +103,7 @@ public class ListaDuplamenteEncadeada {
         return resultado.toString();
     }
 
-    public No buscarDaFrentePraTras(String busca) {
+    public No buscarNoDaFrentePraTras(String busca) {
         if(estaVazia()) {
             throw new RuntimeException("A lista está vazia.");
         }
@@ -124,6 +124,29 @@ public class ListaDuplamenteEncadeada {
         return encontrou ? noAtual : null;
     }
 
+    public int buscarIndiceDaFrentePraTras(String busca) {
+        if(estaVazia()) {
+            throw new RuntimeException("A lista está vazia.");
+        }
+        int indice = 0;
+        if(soHaUmNo()) {
+            return primeiroNo.getDado().equals(busca) ? indice : -1;
+        }
+
+        No noAtual = primeiroNo;
+        boolean encontrou = false;
+        while(encontrou == false && noAtual != null) {
+            if(noAtual.getDado().equals(busca)) {
+                encontrou = true;
+                break;
+            }
+            noAtual = noAtual.getProximoNo();
+            indice++;
+        }
+
+        return encontrou ? indice : -1;
+    }
+
     public static void main(String[] args) {
         ListaDuplamenteEncadeada lista = new ListaDuplamenteEncadeada();
         System.out.println(lista.toString());
@@ -134,7 +157,8 @@ public class ListaDuplamenteEncadeada {
         lista.inserirEmSequencia("Pinho sol");
         System.out.println(lista.toString());
         lista.inserirEmSequencia("Detergente transparente");
-        No noBuscado = lista.buscarDaFrentePraTras("Detergente amarelo");
+        No noBuscado = lista.buscarNoDaFrentePraTras("Detergente amarelo");
+        int indiceNoBuscado = lista.buscarIndiceDaFrentePraTras("Detergente transparente");
         System.out.println(lista.toString());
     }
 }
