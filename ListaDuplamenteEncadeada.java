@@ -30,30 +30,15 @@ public class ListaDuplamenteEncadeada {
         incrementarTamanho();
     }
 
-    public void inserirEmSequencia(No novoNo) {
-        if(estaVazia()) {
-            primeiraInsercao(novoNo);
-        } else {
-            No ultimoNoAtual = ultimoNo;
-            ultimoNo.setProximoNo(novoNo);
-            ultimoNo = novoNo;
-            ultimoNo.setNoAnterior(ultimoNo);
-            ultimoNoAtual.setProximoNo(ultimoNo);
-            incrementarTamanho();
-        }
-    }
-
     public void inserirEmSequencia(String dadoDoNovoNo) {
-        No novoNo = new No(dadoDoNovoNo);
-        if (estaVazia()) {
-            primeiraInsercao(novoNo);
+        No novoUltimoNo = new No(dadoDoNovoNo);
+
+        if(estaVazia()) {
+            primeiraInsercao(novoUltimoNo);
         } else {
-            ultimoNo.setProximoNo(novoNo);
-            ultimoNo.getProximoNo().setNoAnterior(ultimoNo);
-            No noOrfao = ultimoNo;
-            ultimoNo = novoNo;
-            ultimoNo.setNoAnterior(noOrfao);
-            ultimoNo.setProximoNo(null);
+            novoUltimoNo.setNoAnterior(ultimoNo);
+            ultimoNo.setProximoNo(novoUltimoNo);
+            ultimoNo = novoUltimoNo;
             incrementarTamanho();
         }
     }
@@ -67,12 +52,10 @@ public class ListaDuplamenteEncadeada {
             ultimoNo = null;
             tamanho = 0;
         } else {
-            // Pega o anterior do utimo, seta ee como útimo
-            // Seta o anterior do antigo útimo como null
             No novoUltimo = ultimoNo.getNoAnterior();
             ultimoNo.setNoAnterior(null);
+            novoUltimo.setProximoNo(null);
             ultimoNo = novoUltimo;
-            ultimoNo.setProximoNo(null);
             decrementarTamanho();
         }
     }
@@ -120,20 +103,38 @@ public class ListaDuplamenteEncadeada {
         return resultado.toString();
     }
 
+    public No buscarDaFrentePraTras(String busca) {
+        if(estaVazia()) {
+            throw new RuntimeException("A lista está vazia.");
+        }
+        if(soHaUmNo()) {
+            return primeiroNo.getDado().equals(busca) ? primeiroNo : null;
+        }
+
+        No noAtual = primeiroNo;
+        boolean encontrou = false;
+        while(encontrou == false && noAtual != null) {
+            if(noAtual.getDado().equals(busca)) {
+                encontrou = true;
+                break;
+            }
+            noAtual = noAtual.getProximoNo();
+        }
+
+        return encontrou ? noAtual : null;
+    }
+
     public static void main(String[] args) {
         ListaDuplamenteEncadeada lista = new ListaDuplamenteEncadeada();
         System.out.println(lista.toString());
-        lista.inserirEmSequencia("1o nó");
+        lista.inserirEmSequencia("Aromatizador");
         System.out.println(lista.toString());
-        lista.inserirEmSequencia("2o nó");
+        lista.inserirEmSequencia("Detergente amarelo");
         System.out.println(lista.toString());
-        lista.inserirEmSequencia("3o nó");
+        lista.inserirEmSequencia("Pinho sol");
         System.out.println(lista.toString());
-        lista.removerEmSequencia();
-        System.out.println(lista.toString());
-        lista.removerEmSequencia();
-        System.out.println(lista.toString());
-        lista.removerEmSequencia();
+        lista.inserirEmSequencia("Detergente transparente");
+        No noBuscado = lista.buscarDaFrentePraTras("Detergente amarelo");
         System.out.println(lista.toString());
     }
 }
