@@ -15,9 +15,13 @@ public class ListaDuplamenteEncadeada {
         incrementarTamanho();
     }
 
+    public boolean soHaUmNo() {
+        return tamanho == 1;
+    }
+
     public void primeiraInsercao(String dadoDoNovoPrimeiroNo) {
         if(!estaVazia()) {
-            throw new RuntimeException("A lista já teve uma primeira inserção");
+            throw new RuntimeException("A lista já teve uma primeira inserção.");
         }
 
         No novoPrimeiroNo = new No(dadoDoNovoPrimeiroNo);
@@ -41,15 +45,35 @@ public class ListaDuplamenteEncadeada {
 
     public void inserirEmSequencia(String dadoDoNovoNo) {
         No novoNo = new No(dadoDoNovoNo);
-        if(estaVazia()) {
+        if (estaVazia()) {
             primeiraInsercao(novoNo);
         } else {
-            No ultimoNoAtual = ultimoNo;
             ultimoNo.setProximoNo(novoNo);
+            ultimoNo.getProximoNo().setNoAnterior(ultimoNo);
+            No noOrfao = ultimoNo;
             ultimoNo = novoNo;
-            ultimoNo.setNoAnterior(ultimoNo);
-            ultimoNoAtual.setProximoNo(ultimoNo);
+            ultimoNo.setNoAnterior(noOrfao);
+            ultimoNo.setProximoNo(null);
             incrementarTamanho();
+        }
+    }
+
+    public void removerEmSequencia() {
+        if(estaVazia()) {
+            throw new RuntimeException("A lista está vazia.");
+        }
+        if(soHaUmNo()) {
+            primeiroNo = null;
+            ultimoNo = null;
+            tamanho = 0;
+        } else {
+            // Pega o anterior do utimo, seta ee como útimo
+            // Seta o anterior do antigo útimo como null
+            No novoUltimo = ultimoNo.getNoAnterior();
+            ultimoNo.setNoAnterior(null);
+            ultimoNo = novoUltimo;
+            ultimoNo.setProximoNo(null);
+            decrementarTamanho();
         }
     }
 
@@ -59,6 +83,10 @@ public class ListaDuplamenteEncadeada {
 
     public void incrementarTamanho() {
         tamanho++;
+    }
+
+    public void decrementarTamanho() {
+        tamanho--;
     }
 
     public boolean estaVazia() {
@@ -100,6 +128,12 @@ public class ListaDuplamenteEncadeada {
         lista.inserirEmSequencia("2o nó");
         System.out.println(lista.toString());
         lista.inserirEmSequencia("3o nó");
+        System.out.println(lista.toString());
+        lista.removerEmSequencia();
+        System.out.println(lista.toString());
+        lista.removerEmSequencia();
+        System.out.println(lista.toString());
+        lista.removerEmSequencia();
         System.out.println(lista.toString());
     }
 }
