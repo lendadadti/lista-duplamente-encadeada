@@ -103,7 +103,7 @@ public class ListaDuplamenteEncadeada {
         return resultado.toString();
     }
 
-    public No buscarNoDaFrentePraTras(String busca) {
+    public No buscarDaFrentePraTras(String busca) {
         if(estaVazia()) {
             throw new RuntimeException("A lista está vazia.");
         }
@@ -147,6 +147,46 @@ public class ListaDuplamenteEncadeada {
         return encontrou ? indice : -1;
     }
 
+    public boolean osNosSaoVizinhos(No um, No dois) {
+        if(um == null) {
+            throw new RuntimeException("Primeiro argumento null.");
+        }
+        if(dois == null) {
+            throw new RuntimeException("Segundo argumento null.");
+        }
+
+        return (um.getProximoNo() == dois && dois.getNoAnterior() == um) || (um.getNoAnterior() == dois && dois.getProximoNo() == um);
+    }
+
+    public void trocarDeLugar(No um, No dois) {
+        if(um == null) {
+            throw new RuntimeException("Primeiro argumento null.");
+        }
+        if(dois == null) {
+            throw new RuntimeException("Segundo argumento null.");
+        }
+        if(um == dois) {
+            throw new RuntimeException("Ambos os argumentos são iguais.");
+        }
+        if(soHaUmNo()) {
+            throw new RuntimeException("Só há um nó na lista.");
+        }
+
+        if(osNosSaoVizinhos(um, dois)) {
+            trocarVizinhosDeLugar(um, dois);
+        } else {
+            trocarDistantesDeLugar(um, dois);
+        }
+    }
+
+    private void trocarDistantesDeLugar(No um, No dois) {
+
+    }
+
+    private void trocarVizinhosDeLugar(No um, No dois) {
+
+    }
+
     public static void main(String[] args) {
         ListaDuplamenteEncadeada lista = new ListaDuplamenteEncadeada();
         System.out.println(lista.toString());
@@ -157,8 +197,7 @@ public class ListaDuplamenteEncadeada {
         lista.inserirEmSequencia("Pinho sol");
         System.out.println(lista.toString());
         lista.inserirEmSequencia("Detergente transparente");
-        No noBuscado = lista.buscarNoDaFrentePraTras("Detergente amarelo");
-        int indiceNoBuscado = lista.buscarIndiceDaFrentePraTras("Detergente transparente");
+        No noBuscado = lista.buscarDaFrentePraTras("Detergente amarelo");
         System.out.println(lista.toString());
     }
 }
