@@ -180,11 +180,62 @@ public class ListaDuplamenteEncadeada {
     }
 
     private void trocarDistantesDeLugar(No um, No dois) {
+        if(um == null) {
+            throw new RuntimeException("Primeiro argumento null.");
+        }
+        if(dois == null) {
+            throw new RuntimeException("Segundo argumento null.");
+        }
+        if(um == dois) {
+            throw new RuntimeException("Ambos os argumentos são iguais.");
+        }
+        No vizinhoEsquerdoDoUm = um.getNoAnterior();
+        No vizinhoDireitoDoUm = um.getProximoNo();
+        No vizinhoEsquerdoDoDois = dois.getNoAnterior();
+        No vizinhoDireitoDoDois = dois.getProximoNo();
+        if(vizinhoEsquerdoDoUm != null) {
+            vizinhoEsquerdoDoUm.setProximoNo(null);
+            vizinhoEsquerdoDoUm.setProximoNo(dois);
+        }
+        if(vizinhoDireitoDoUm != null) {
+            vizinhoDireitoDoUm.setNoAnterior(null);
+            vizinhoDireitoDoUm.setNoAnterior(dois);
+        }
+        um.setNoAnterior(null);
+        um.setProximoNo(null);
 
     }
 
     private void trocarVizinhosDeLugar(No um, No dois) {
+        if(soHaDoisNos()) {
+            um.setNoAnterior(dois);
+            dois.setProximoNo(um);
+            um.setProximoNo(null);
+            dois.setNoAnterior(null);
+            primeiroNo = dois;
+            ultimoNo = um;
+        } else {
+            No vizinhoEsquerdoDoUm = um.getNoAnterior();
+            No vizinhoDireitoDoUm = um.getProximoNo();
+            No vizinhoEsquerdoDoDois = dois.getNoAnterior();
+            No vizinhoDireitoDoDois = dois.getProximoNo();
 
+            // ..
+
+        }
+
+    }
+
+    public boolean soHaDoisNos() {
+        return tamanho == 2;
+    }
+
+    public boolean ehOPrimeiroNo(No no) {
+        return no == primeiroNo;
+    }
+
+    public boolean ehUltimoNo(No no) {
+        return no == ultimoNo;
     }
 
     public static void main(String[] args) {
@@ -200,4 +251,3 @@ public class ListaDuplamenteEncadeada {
         No noBuscado = lista.buscarDaFrentePraTras("Detergente amarelo");
         System.out.println(lista.toString());
     }
-}
